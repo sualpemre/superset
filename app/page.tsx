@@ -14,17 +14,8 @@ export default function Home() {
   const fetchDatabases = async () => {
     try {
       // Login request
-      const loginResponse = await fetch('http://34.118.94.209:8088/api/v1/security/login', {
+      const loginResponse = await fetch('/api/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: 'admin',
-          password: 'kereviz',
-          provider: 'db',
-          refresh: true,
-        }),
       });
 
       if (!loginResponse.ok) {
@@ -35,7 +26,7 @@ export default function Home() {
       const accessToken = loginData.access_token;
 
       // CSRF token request
-      const csrfResponse = await fetch('http://34.118.94.209:8088/api/v1/security/csrf_token', {
+      const csrfResponse = await fetch('/api/csrf', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -50,10 +41,9 @@ export default function Home() {
       const csrfToken = csrfData.result;
 
       // Database list request
-      const databaseResponse = await fetch('http://34.118.94.209:8088/api/v1/database', {
+      const databaseResponse = await fetch('/api/databases', {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
           'X-CSRFToken': csrfToken,
         },
